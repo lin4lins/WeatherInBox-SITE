@@ -1,0 +1,6 @@
+.idea
+.env
+data
+authorization/migrations/*
+subscriptions/migrations/*
+db.sqlite3

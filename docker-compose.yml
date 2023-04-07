@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8001
+    volumes:
+      - .:/app
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    networks:
+      - task-17-djangoweatherremider_my-network
+
+networks:
+  task-17-djangoweatherremider_my-network:
+    external: true
