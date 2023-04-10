@@ -1,6 +1,6 @@
 import datetime
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 
@@ -13,6 +13,7 @@ from weather_reminder.settings import API_URL
 class LogInView(View):
     template_name = 'authorization/login.html'
     form_class = LogInForm
+    success_url = '/home/'
 
     def get(self, request):
         form = self.form_class()
@@ -23,7 +24,7 @@ class LogInView(View):
         if form.is_valid():
             login_response = requests.post(f'{API_URL}/token/', data=form.cleaned_data)
             if login_response.status_code == 200:
-                response = HttpResponse('Success')
+                response = HttpResponseRedirect(self.success_url)
                 response.set_cookie(key='jwt_token',
                                     value=login_response.json().get('access'),
                                     max_age=datetime.timedelta(days=1))
@@ -39,9 +40,10 @@ class LogInView(View):
 
 class LogOutView(View):
     template_name = 'authorization/logout.html'
+    success_url = '/home/'
 
     def get(self, request):
-        response = HttpResponse('Log out successfully')
+        response = HttpResponseRedirect(self.success_url)
         response.delete_cookie('jwt_token')
         response.delete_cookie('user_id')
         return response

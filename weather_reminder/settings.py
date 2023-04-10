@@ -134,3 +134,4 @@ AUTH_USER_MODEL = 'authorization.User'
 API_URL = 'http://api:8000/api/v1'
 
 LOGIN_URL = '/auth/login/'
+LOGIN_REDIRECT_URL = '/home/'
