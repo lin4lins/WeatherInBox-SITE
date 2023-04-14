@@ -1,0 +1,59 @@
+{% extends "navbase.html" %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row justify-content-center align-items-center">
+    <div class="col-md-6 mb-4 mb-md-0">
+      <div class="row mt-5">
+        <div class="col-12">
+          <h3 class="fw-bolder text-start">Create subscription</h3>
+        </div>
+      </div>
+      <form class="form-group" method="POST" action="{% url 'subscription-create' %}">
+        {% csrf_token %}
+        <div class="row mt-3">
+          <div class="col-12">
+            <div class="card shadow-sm border-top-0">
+              <div class="card-body">
+                <div class="row mt-2">
+                  <div class="col">
+                    <input type="text" name="country_name" list="countries" class="form-control" id="country_select"
+                           placeholder="Country" required>
+                    <datalist id="countries">
+                      {% for country in country_names %}
+                        <option value="{{ country }}">
+                      {% endfor %}
+                    </datalist>
+                  </div>
+                  <div class="col">
+                    <input type="text" class="form-control" id="city_name" name="city_name" placeholder="City" required>
+                  </div>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-xs-12 col-3">
+                    <input min="1" max="12" type="number" id="typeNumber" name="times_per_day" class="form-control"
+                           placeholder="Frequency" required>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <small class="text-muted">Enter how often you would like to receive weather updates</small>
+                  </div>
+                </div>
+                <div class="row mt-3">
+                  <div class="col">
+                    <button type="submit" class="btn btn-block fw-bolder text-white" style="background-color: #00BF63">Create</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

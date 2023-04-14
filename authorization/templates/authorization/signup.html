@@ -22,7 +22,7 @@
             <h2 class="fw-bolder">Sign Up</h2>
             <h5 class="fw-light text-secondary">Easy and fast.</h5>
             <hr>
-            <form method='post' action='/auth/signup/' class="form-group">
+            <form method='POST' action="{% url 'sign-up' %}" class="form-group">
               {% csrf_token %}
               <div class="mb-3">
                 <input type="text" class="form-control bg-body-secondary" id="username" name="username" placeholder="Username" required>
@@ -55,7 +55,7 @@
       <div class="row mt-3">
         <div class="card shadow-sm border-top-0 text-center">
           <div class="card-body">
-            <h5 class="fw-light">Already have an account? <a href="/auth/login/" class="text-decoration-none" style="color: #00BF63">Log In</a></h5>
+            <h5 class="fw-light">Already have an account? <a href="{% url 'log-in' %}" class="text-decoration-none" style="color: #00BF63">Log In</a></h5>
           </div>
         </div>
       </div>

@@ -1,0 +1,146 @@
+{% extends "navbase.html" %}
+
+{% block content %}
+{% load timestamps %}
+
+<div class="container">
+  <div class="row justify-content-center align-items-center">
+    <div class="col-md-9 mb-4 mb-md-0">
+      <div class="row mt-5">
+        <div class="col-10">
+          <h3 class="fw-bolder text-start">Subscriptions</h3>
+        </div>
+        <div class="col">
+          <a class="btn fw-bolder px-4 btn-outline" style="border-color: #00BF63; color: #00BF63;"
+            href="{% url 'subscription-create' %}">Add</a>
+        </div>
+      </div>
+      {% if my_list|length == 0 %}
+      <div class="row justify-content-center align-items-center mt-5">
+        <div class="col text-center mt-5">
+          <h5 class="text-secondary">You do not have any subscriptions yet</h5>
+        </div>
+      </div>
+      {% else %}
+      <div class="row justify-content-center align-items-center my-3">
+        <div class="col">
+          <div class="card shadow-sm border-top-0">
+            <div class="card-body">
+              <div class="row justify-content-center align-items-center py-1">
+                <div class="col-2 text-center">
+                  <h6 class="text-secondary">ID</h6>
+                </div>
+                <div class="col-4">
+                  <h6 class="text-secondary">Location</h6>
+                </div>
+                <div class="col-3 text-center">
+                  <h6 class="text-secondary">Frequency</h6>
+                </div>
+                <div class="col-2 text-center">
+                  <h6 class="text-secondary">Status</h6>
+                </div>
+                 <div class="col-1 text-center">
+                  <h6 class=""></h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% for sub in subs %}
+      <div id="subRow-{{sub.id}}" class="row justify-content-center align-items-center mb-2">
+        <div class="col">
+          <div class="card shadow-sm border-top-0">
+            <div class="card-body">
+              <div class="row justify-content-center align-items-center">
+                <div class="col-2 text-center" data-bs-toggle="modal" data-bs-target="#subModal-{{sub.id}}">
+                  <div class="row">
+                  {% get_data_from_timestamp sub.created_at as sub_date %}
+                  <h6 class="">{{ forloop.counter }}</h6>
+                  </div>
+                </div>
+                <div class="col-4" data-bs-toggle="modal" data-bs-target="#subModal-{{sub.id}}">
+                  <div class="row">
+                    <h6 class="">{{ sub.city.name }}, {{ sub.city.country_name }}</h6>
+                  </div>
+                  <div class="row">
+                    <small class="text-muted">Created at {{sub_date}}</small>
+                  </div>
+                </div>
+                <div class="col-3 text-center" data-bs-toggle="modal" data-bs-target="#subModal-{{sub.id}}">
+                  <h6 id="timesPerDay-{{sub.id}}" class="">{{ sub.times_per_day }}</h6>
+                </div>
+                <div class="col-2 text-center" data-bs-toggle="modal" data-bs-target="#subModal-{{sub.id}}">
+                  {% if sub.is_active %}
+                    <span id="badgeActive-{{sub.id}}" class="badge rounded-pill fw-bold" style="background-color: #00BF63">Active</span>
+                  {% else %}
+                    <span id="badgeCancelled-{{sub.id}}" class="badge rounded-pill fw-bold bg-danger">Cancelled</span>
+                  {% endif %}
+                </div>
+                <div class="col-1 text-center">
+                  <button id="deleteBtn-{{sub.id}}" type="button" class="btn text-danger fw-bolder"
+                    onclick="deleteSubscription('{{sub.id}}')">✕</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% for sub in subs %}
+<div class="modal fade" id="subModal-{{sub.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <form class="form-floating">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">{{ sub.city.name }}, {{ sub.city.country_name }}</h1>
+          <div id="statusDiv-{{sub.id}}"></div>
+          <button id="modalCloseBtn-{{sub.id}}" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col">
+              <div class="form-floating">
+                <input type="number" min="1" max="12" value="{{ sub.times_per_day }}" class="form-control"
+                   id="timesPerDayInput-{{sub.id}}" name="times_per_day">
+                <label for="timesPerDayInput-{{sub.id}}">Frequency</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <small class="text-muted">Enter how often you would like to receive weather updates</small>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="row">
+            {% if sub.is_active %}
+            <div class="col-md-auto mt-3 mt-md-0">
+              <button id="cancelBtn-{{sub.id}}" type="button" class="btn fw-bolder btn-outline-danger"
+                onclick="cancelSubscription('{{sub.id}}', '{{sub.times_per_day}}', '{{csrf_token}}')">Cancel</button>
+            </div>
+            {% else %}
+            <div class="col-md-auto mt-3 mt-md-0">
+              <button id="activateBtn-{{sub.id}}" type="button" class="btn fw-bolder btn-outline-danger"
+                onclick="activateSubscription('{{sub.id}}', '{{sub.times_per_day}}', '{{csrf_token}}')">Activate</button>
+            </div>
+            {% endif %}
+            <div class="col-md-auto mt-3 mt-md-0">
+              <button type="button" class="btn text-white fw-bolder" style="background-color: #00BF63"
+                onclick="updateSubscription('{{sub.id}}', '{{sub.is_active}}', '{{csrf_token}}')">Update</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+
+{% endblock %}

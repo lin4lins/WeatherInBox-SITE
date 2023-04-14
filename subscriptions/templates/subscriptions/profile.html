@@ -1,0 +1,80 @@
+{% extends "navbase.html" %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row justify-content-center align-items-center">
+    <div class="col-md-7 mb-4 mb-md-0">
+      <div class="row mt-5">
+        <div class="col-12">
+          <h3 class="fw-bolder text-start">Profile details</h3>
+        </div>
+      </div>
+      <form class="form-floating" method="POST" action="/profile/">
+        {% csrf_token %}
+        <div class="row mt-3">
+          <div class="col-12">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}">
+              <label for="first_name">First name</label>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}">
+              <label for="last_name">Last name</label>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}">
+              <label for="username">Username</label>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div class="form-floating">
+              <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+              <label for="email">Email</label>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div class="form-floating">
+              <input type="url" class="form-control" id="webhook_url" name="webhook_url" value="{{ user.webhook_url }}">
+              <label for="webhook_url">URL</label>
+              <small class="text-muted">Enter the URL where you want to receive weather updates, or leave blank to receive updates via email only.</small>
+            </div>
+        </div>
+        <div class="row mt-5">
+          <div class="col-12">
+            <div class="form-check">
+              {% if user.are_emails_desired %}
+              <input class="form-check-input" type="checkbox" name="are_emails_desired" value="{{ user.are_emails_desired }}" id="emails_desired" checked>
+              <label class="form-check-label" for="emails_desired">I would like to receive weather updates via email</label>
+              {% else %}
+              <input class="form-check-input" type="checkbox" name="are_emails_desired" id="emails_not_desired">
+              <label class="form-check-label" for="emails_not_desired">I would like to receive weather updates via email</label>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+         <div class="row mt-3">
+          <div class="col-12">
+            <div class="d-flex">
+              <button type="submit" class="btn btn-sm text-white fw-bolder" style="background-color: #00BF63; width: fit-content;">Update</button>
+            </div>
+          </div>
+         </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
