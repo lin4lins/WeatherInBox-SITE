@@ -122,17 +122,17 @@
             {% if sub.is_active %}
             <div class="col-md-auto mt-3 mt-md-0">
               <button id="cancelBtn-{{sub.id}}" type="button" class="btn fw-bolder btn-outline-danger"
-                onclick="cancelSubscription('{{sub.id}}', '{{sub.times_per_day}}', '{{csrf_token}}')">Cancel</button>
+                onclick="cancelSubscription('{{sub.id}}', '{{csrf_token}}')">Cancel</button>
             </div>
             {% else %}
             <div class="col-md-auto mt-3 mt-md-0">
               <button id="activateBtn-{{sub.id}}" type="button" class="btn fw-bolder btn-outline-danger"
-                onclick="activateSubscription('{{sub.id}}', '{{sub.times_per_day}}', '{{csrf_token}}')">Activate</button>
+                onclick="activateSubscription('{{sub.id}}', '{{csrf_token}}')">Activate</button>
             </div>
             {% endif %}
             <div class="col-md-auto mt-3 mt-md-0">
               <button type="button" class="btn text-white fw-bolder" style="background-color: #00BF63"
-                onclick="updateSubscription('{{sub.id}}', '{{sub.is_active}}', '{{csrf_token}}')">Update</button>
+                onclick="updateSubscription('{{sub.id}}', '{{csrf_token}}')">Update</button>
             </div>
           </div>
         </div>

@@ -48,9 +48,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 <script>
-function cancelSubscription(subId, timesPerDay, csrfToken) {
+function cancelSubscription(subId, csrfToken) {
   const url = `/subscription/update/${subId}/`;
-  const data = { is_active: false, times_per_day: timesPerDay };
+  const data = { is_active: false };
   const headers = {
     'Content-Type': 'application/json',
     'X-CSRFToken': csrfToken,
@@ -65,17 +65,19 @@ function cancelSubscription(subId, timesPerDay, csrfToken) {
     if (response.status === 200) {
       let cancelButton = document.getElementById(`cancelBtn-${subId}`);
       cancelButton.outerHTML = `<button id="activateBtn-${subId}" type="button" class="btn fw-bolder btn-outline-danger"
-                      onclick="activateSubscription('${subId}', '${timesPerDay}', '${csrfToken}')">Activate</button>`;
+                      onclick="activateSubscription('${subId}', '${csrfToken}')">Activate</button>`;
       let badgeActive = document.getElementById(`badgeActive-${subId}`);
       badgeActive.outerHTML = `<span id="badgeCancelled-${subId}" class="badge rounded-pill fw-bold bg-danger">Cancelled</span>`;
+      let statusDiv = document.getElementById(`statusDiv-${subId}`);
+        statusDiv.innerHTML = `<span class="badge rounded-pill" style="color: #00BF63; border: 1px solid #00BF63; background-color: #E5F8EF; margin-left: 5px;">✓ Completed</span>`
     }
   })
   .catch(error => console.error(error));
 }
 
-function activateSubscription(subId, timesPerDay, csrfToken) {
+function activateSubscription(subId, csrfToken) {
   const url = `/subscription/update/${subId}/`;
-  const data = { is_active: true, times_per_day: timesPerDay };
+  const data = { is_active: true };
   const headers = {
     'Content-Type': 'application/json',
     'X-CSRFToken': csrfToken,
@@ -90,18 +92,20 @@ function activateSubscription(subId, timesPerDay, csrfToken) {
     if (response.status === 200) {
       let activateButton = document.getElementById(`activateBtn-${subId}`);
       activateButton.outerHTML = `<button id="cancelBtn-${subId}" type="button" class="btn fw-bolder btn-outline-danger"
-                      onclick="cancelSubscription('${subId}', '${timesPerDay}', '${csrfToken}')">Cancel</button>`;
+                      onclick="cancelSubscription('${subId}', '${csrfToken}')">Cancel</button>`;
       let badgeCancelled = document.getElementById(`badgeCancelled-${subId}`);
       badgeCancelled.outerHTML = `<span id="badgeActive-${subId}" class="badge rounded-pill fw-bold" style="background-color: #00BF63">Active</span>`;
+      let statusDiv = document.getElementById(`statusDiv-${subId}`);
+        statusDiv.innerHTML = `<span class="badge rounded-pill" style="color: #00BF63; border: 1px solid #00BF63; background-color: #E5F8EF; margin-left: 5px;">✓ Completed</span>`
     }
   })
   .catch(error => console.error(error));
 }
 
-function updateSubscription(subId, isActive, csrfToken) {
+function updateSubscription(subId, csrfToken) {
   const url = `/subscription/update/${subId}/`;
   const timesPerDayInput = document.getElementById(`timesPerDayInput-${subId}`);
-  const data = { is_active: isActive, times_per_day: timesPerDayInput.value };
+  const data = { times_per_day: timesPerDayInput.value };
   const headers = {
     'Content-Type': 'application/json',
     'X-CSRFToken': csrfToken,
