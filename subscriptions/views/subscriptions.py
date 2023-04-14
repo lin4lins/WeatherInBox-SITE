@@ -2,7 +2,7 @@ import json
 
 import pycountry
 import requests
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 
@@ -24,6 +24,7 @@ class SubscriptionListView(LoginRequiredMixin, View):
 class SubscriptionCreateView(LoginRequiredMixin, View):
     template_name = 'subscriptions/subscriptions-create.html'
     form_class = SubscriptionCreateForm
+    success_url = '/subscription/list'
 
     def get(self, request):
         form = SubscriptionCreateForm()
@@ -39,7 +40,7 @@ class SubscriptionCreateView(LoginRequiredMixin, View):
                                                          headers={'Authorization': f'Bearer {jwt_token}',
                                                                   'Content-Type': 'application/json'})
             if create_subscription_response.status_code == 201:
-                return HttpResponse('Success')
+                return HttpResponseRedirect(self.success_url)
 
             return HttpResponse(create_subscription_response.content)
 

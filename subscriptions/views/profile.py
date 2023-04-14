@@ -1,7 +1,7 @@
 import json
 
 import requests
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 
@@ -13,6 +13,7 @@ from weather_reminder.settings import API_URL
 class ProfileView(LoginRequiredMixin, View):
     template_name = 'subscriptions/profile.html'
     form_class = UserUpdateForm
+    success_url = '/profile/'
 
     def get(self, request):
         form = UserUpdateForm()
@@ -30,7 +31,7 @@ class ProfileView(LoginRequiredMixin, View):
                                                           headers={'Authorization': f'Bearer {jwt_token}',
                                                                    'Content-Type': 'application/json'})
             if partial_update_user_response.status_code == 200:
-                return HttpResponse('Success')
+                return HttpResponseRedirect(self.success_url)
 
             return HttpResponse(partial_update_user_response.content)
 
