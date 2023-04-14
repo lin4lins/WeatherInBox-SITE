@@ -1,5 +1,6 @@
+import json
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 
@@ -15,6 +16,7 @@ from weather_reminder.settings import API_URL
 class SignUpView(View):
     template_name = 'authorization/signup.html'
     form_class = SignUpForm
+    success_url = '/auth/login/'
 
     def get(self, request):
         form = self.form_class()
@@ -23,9 +25,11 @@ class SignUpView(View):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
-            create_user_response = requests.post(f'{API_URL}/users/', data=form.cleaned_data)
+            form_data_json = json.dumps(form.cleaned_data)
+            create_user_response = requests.post(f'{API_URL}/users/', data=form_data_json,
+                                                 headers={'Content-Type': 'application/json'})
             if create_user_response.status_code == 201:
-                return HttpResponse('Success')
+                return HttpResponseRedirect(self.success_url)
 
             return HttpResponse(create_user_response.content)
 

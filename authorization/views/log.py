@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -22,10 +23,11 @@ class LogInView(View):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
-            login_response = requests.post(f'{API_URL}/token/', data=form.cleaned_data)
+            form_data_json = json.dumps(form.cleaned_data)
+            login_response = requests.post(f'{API_URL}/token/', data=form_data_json,
+                                           headers={'Content-Type': 'application/json'})
             if login_response.status_code == 200:
                 response = HttpResponseRedirect(self.success_url)
-                print(login_response.json().get('access'))
                 response.set_cookie(key='jwt_token',
                                     value=login_response.json().get('access'),
                                     max_age=datetime.timedelta(days=1))

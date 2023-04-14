@@ -1,3 +1,5 @@
+import json
+
 import requests
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -23,8 +25,10 @@ class ProfileView(LoginRequiredMixin, View):
         form = self.form_class(request.POST)
         if form.is_valid():
             user_id, jwt_token = request.COOKIES.get('user_id'), request.COOKIES.get('jwt_token')
-            partial_update_user_response = requests.patch(f'{API_URL}/users/{user_id}/', data=form.cleaned_data,
-                                                          headers={'Authorization': f'Bearer {jwt_token}'})
+            form_data_json = json.dumps(form.cleaned_data)
+            partial_update_user_response = requests.patch(f'{API_URL}/users/{user_id}/', data=form_data_json,
+                                                          headers={'Authorization': f'Bearer {jwt_token}',
+                                                                   'Content-Type': 'application/json'})
             if partial_update_user_response.status_code == 200:
                 return HttpResponse('Success')
 

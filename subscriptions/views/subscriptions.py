@@ -34,8 +34,8 @@ class SubscriptionCreateView(LoginRequiredMixin, View):
         form = self.form_class(request.POST)
         if form.is_valid():
             jwt_token = request.COOKIES.get('jwt_token')
-            json_data = json.dumps(form.cleaned_data)
-            create_subscription_response = requests.post(f'{API_URL}/subscriptions/', data=json_data,
+            form_data_json = json.dumps(form.cleaned_data)
+            create_subscription_response = requests.post(f'{API_URL}/subscriptions/', data=form_data_json,
                                                          headers={'Authorization': f'Bearer {jwt_token}',
                                                                   'Content-Type': 'application/json'})
             if create_subscription_response.status_code == 201:
@@ -43,7 +43,6 @@ class SubscriptionCreateView(LoginRequiredMixin, View):
 
             return HttpResponse(create_subscription_response.content)
 
-        print(form.errors)
         return HttpResponse(form.errors)
 
 
@@ -57,9 +56,11 @@ class SubscriptionUpdateView(LoginRequiredMixin, View):
         form = self.form_class(request_body_dict)
         if form.is_valid():
             jwt_token = request.COOKIES.get('jwt_token')
+            form_data_json = json.dumps(form.cleaned_data)
             partial_update_subscription_response = requests.patch(f'{API_URL}/subscriptions/{id}/',
-                                                                  data=form.cleaned_data,
-                                                                  headers={'Authorization': f'Bearer {jwt_token}'})
+                                                                  data=form_data_json,
+                                                                  headers={'Authorization': f'Bearer {jwt_token}',
+                                                                           'Content-Type': 'application/json'})
             if partial_update_subscription_response.status_code == 200:
                 return HttpResponse(status=200)
 
@@ -71,7 +72,7 @@ class SubscriptionUpdateView(LoginRequiredMixin, View):
 class SubscriptionDeleteView(LoginRequiredMixin, View):
     template_name = 'subscriptions/subscriptions.html'
 
-    def get(self, request, id):
+    def get(self, request, id: int):
         jwt_token = request.COOKIES.get('jwt_token')
         subscription_delete_response = requests.delete(f'{API_URL}/subscriptions/{id}',
                                                        headers={'Authorization': f'Bearer {jwt_token}'})
