@@ -55,12 +55,12 @@
         <div class="row mt-5">
           <div class="col-12">
             <div class="form-check">
-              {% if user.are_emails_desired %}
-              <input class="form-check-input" type="checkbox" name="are_emails_desired" value="{{ user.are_emails_desired }}" id="emails_desired" checked>
-              <label class="form-check-label" for="emails_desired">I would like to receive weather updates via email</label>
+              {% if user.receive_emails %}
+              <input class="form-check-input" type="checkbox" name="receive_emails" id="receive_emails" checked>
+              <label class="form-check-label" for="receive_emails">I would like to receive weather updates via email</label>
               {% else %}
-              <input class="form-check-input" type="checkbox" name="are_emails_desired" id="emails_not_desired">
-              <label class="form-check-label" for="emails_not_desired">I would like to receive weather updates via email</label>
+              <input class="form-check-input" type="checkbox" name="receive_emails" id="not_receive_emails">
+              <label class="form-check-label" for="not_receive_emails">I would like to receive weather updates via email</label>
               {% endif %}
             </div>
           </div>
