@@ -1,6 +1,6 @@
 import json
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
@@ -32,6 +32,6 @@ class SignUpView(View):
             if create_user_response.status_code == 201:
                 return HttpResponseRedirect(self.success_url)
 
-            return HttpResponse(create_user_response.content)
+            form.add_response_errors(create_user_response.json())
 
-        return HttpResponse(form.errors)
+        return render(request, self.template_name, {'form': form})

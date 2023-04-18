@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authorization.apps.AuthorizationConfig',
     'subscriptions.apps.SubscriptionsConfig',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
