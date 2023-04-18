@@ -2,6 +2,7 @@ import json
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import View
 
 from authorization.forms import SignUpForm
@@ -16,7 +17,7 @@ from weather_reminder.settings import API_URL
 class SignUpView(View):
     template_name = 'authorization/signup.html'
     form_class = SignUpForm
-    success_url = '/auth/login/'
+    success_url = reverse_lazy('login')
 
     def get(self, request):
         form = self.form_class()

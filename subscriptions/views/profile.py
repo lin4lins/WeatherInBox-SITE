@@ -3,6 +3,7 @@ import json
 import requests
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import View
 
 from subscriptions.forms import UserUpdateForm
@@ -13,7 +14,7 @@ from weather_reminder.settings import API_URL
 class ProfileView(LoginRequiredMixin, View):
     template_name = 'subscriptions/profile.html'
     form_class = UserUpdateForm
-    success_url = '/profile/'
+    success_url = reverse_lazy('home')
 
     def get(self, request):
         form = UserUpdateForm()

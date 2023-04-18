@@ -3,6 +3,7 @@ import json
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import View
 
 from authorization.forms import LogInForm
@@ -14,7 +15,7 @@ from weather_reminder.settings import API_URL
 class LogInView(View):
     template_name = 'authorization/login.html'
     form_class = LogInForm
-    success_url = '/home/'
+    success_url = reverse_lazy('home')
 
     def get(self, request):
         form = self.form_class()
@@ -43,7 +44,7 @@ class LogInView(View):
 
 class LogOutView(View):
     template_name = 'authorization/logout.html'
-    success_url = '/home/'
+    success_url = reverse_lazy('home')
 
     def get(self, request):
         response = HttpResponseRedirect(self.success_url)

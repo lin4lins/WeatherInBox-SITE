@@ -14,7 +14,7 @@
           <div class="card-body">
             <h2 class="fw-bolder text-center">Log In</h2>
             <hr>
-            <form method='POST' action="{% url 'log-in' %}" class="form-group">
+            <form method='POST' action="{% url 'login' %}" class="form-group">
               {% csrf_token %}
               <div class="mb-3">
                 <input type="text" class="form-control bg-body-secondary" id="username" name="username" placeholder="Username" required>
@@ -33,7 +33,7 @@
       <div class="row mt-3">
         <div class="card shadow-sm border-top-0 text-center">
           <div class="card-body">
-            <h5 class="fw-light">Still do not have an account? <a href="{% url 'sign-up' %}" class="text-decoration-none" style="color: #00BF63">Sign Up</a></h5>
+            <h5 class="fw-light">Still do not have an account? <a href="{% url 'signup' %}" class="text-decoration-none" style="color: #00BF63">Sign Up</a></h5>
           </div>
         </div>
       </div>

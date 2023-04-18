@@ -4,6 +4,7 @@ import pycountry
 import requests
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import View
 
 from subscriptions.forms import SubscriptionCreateForm, SubscriptionUpdateForm
@@ -24,7 +25,7 @@ class SubscriptionListView(LoginRequiredMixin, View):
 class SubscriptionCreateView(LoginRequiredMixin, View):
     template_name = 'subscriptions/subscriptions-create.html'
     form_class = SubscriptionCreateForm
-    success_url = '/subscription/list'
+    success_url = reverse_lazy('subscription-list')
 
     def get(self, request):
         form = SubscriptionCreateForm()
