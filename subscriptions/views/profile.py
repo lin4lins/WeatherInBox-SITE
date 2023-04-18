@@ -17,11 +17,11 @@ class ProfileView(LoginRequiredMixin, View):
     success_url = reverse_lazy('home')
 
     def get(self, request):
-        form = UserUpdateForm()
         user_id, jwt_token = request.COOKIES.get('user_id'), request.COOKIES.get('jwt_token')
         current_user_response = requests.get(f'{API_URL}/users/{user_id}',
                                              headers={'Authorization': f'Bearer {jwt_token}'})
-        return render(request, self.template_name, {'form': form, 'user': current_user_response.json()})
+        form = UserUpdateForm(current_user_response.json())
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request):
         form = self.form_class(request.POST)
@@ -34,6 +34,6 @@ class ProfileView(LoginRequiredMixin, View):
             if partial_update_user_response.status_code == 200:
                 return HttpResponseRedirect(self.success_url)
 
-            return HttpResponse(partial_update_user_response.content)
+            form.add_response_errors(partial_update_user_response.json())
 
-        return HttpResponse(form.errors)
+        return render(request, self.template_name, {'form': form})
