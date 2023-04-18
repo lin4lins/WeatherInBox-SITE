@@ -1,14 +1,14 @@
 import datetime
 import json
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
 
-from authorization.forms import LogInForm
 import requests
 
+from authorization.forms import LogInForm
 from weather_reminder.settings import API_URL
 
 
@@ -37,9 +37,10 @@ class LogInView(View):
                                     max_age=datetime.timedelta(days=1))
                 return response
 
-            return HttpResponse(login_response.content)
+            form.add_response_errors(login_response.json())
+            return render(request, self.template_name, {'form': form})
 
-        return HttpResponse(form.errors)
+        return render(request, self.template_name, {'form': form})
 
 
 class LogOutView(View):

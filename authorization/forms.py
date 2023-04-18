@@ -1,3 +1,5 @@
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django import forms
 from django.forms import ModelForm
 
 from authorization.models import User
@@ -28,3 +30,7 @@ class LogInForm(ModelForm):
     class Meta:
         model = User
         fields = ['username', 'password']
+
+    def add_response_errors(self, field_errors: dict):
+        for field, error in field_errors.items():
+            self.add_error(None, error)
