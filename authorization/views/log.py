@@ -38,7 +38,6 @@ class LogInView(View):
                 return response
 
             form.add_response_errors(login_response.json())
-            return render(request, self.template_name, {'form': form})
 
         return render(request, self.template_name, {'form': form})
 
