@@ -1,15 +1,13 @@
 import json
 
+import requests
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
 
 from authorization.forms import SignUpForm
-import requests
-
 from weather_reminder.settings import API_URL
-
 
 # Create your views here.
 
@@ -31,6 +29,6 @@ class SignUpView(View):
             if create_user_response.status_code == 201:
                 return HttpResponseRedirect(self.success_url)
 
-            form.add_response_errors(create_user_response.json())
+            form.add_api_response_errors(create_user_response.json())
 
         return render(request, self.template_name, {'form': form})

@@ -13,4 +13,4 @@ class HomeView(LoginRequiredMixin, View):
         user_id, jwt_token = request.COOKIES.get('user_id'), request.COOKIES.get('jwt_token')
         current_user_response = requests.get(f'{API_URL}/users/{user_id}',
                                              headers={'Authorization': f'Bearer {jwt_token}'})
-        return render(request, self.template_name, {"user": current_user_response.json()})
+        return render(request, self.template_name, {'user': current_user_response.json()})

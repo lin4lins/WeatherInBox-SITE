@@ -5,9 +5,9 @@ from django.db import models
 
 
 class User(AbstractUser):
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150)
-    email = models.EmailField()
+    first_name = models.CharField(blank=True, max_length=150)
+    last_name = models.CharField(blank=True, max_length=150)
+    email = models.EmailField(max_length=255)
     webhook_url = models.CharField(blank=True, max_length=255)
     receive_emails = models.BooleanField(default=True)
 

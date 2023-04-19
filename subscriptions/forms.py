@@ -1,6 +1,8 @@
 import json
+
 from authorization.forms import CustomModelForm
 from authorization.models import User
+
 from .models import Subscription
 
 
@@ -29,10 +31,10 @@ class SubscriptionUpdateForm(CustomModelForm):
         fields = ['times_per_day', 'is_active']
 
 
-class UserUpdateForm(CustomModelForm):
+class UpdateProfileForm(CustomModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username',  'email', 'webhook_url', 'receive_emails']
+        fields = ['first_name', 'last_name', 'username', 'email', 'webhook_url', 'receive_emails']
         labels = {
             'webhook_url': 'URL'
         }

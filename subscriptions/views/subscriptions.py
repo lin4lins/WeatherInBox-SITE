@@ -57,9 +57,8 @@ class SubscriptionUpdateView(LoginRequiredMixin, View):
         form = self.form_class(request_body_dict)
         if form.is_valid():
             jwt_token = request.COOKIES.get('jwt_token')
-            form_data_json = json.dumps(form.cleaned_data)
             partial_update_subscription_response = requests.patch(f'{API_URL}/subscriptions/{id}/',
-                                                                  data=form_data_json,
+                                                                  data=form.get_json(),
                                                                   headers={'Authorization': f'Bearer {jwt_token}',
                                                                            'Content-Type': 'application/json'})
             if partial_update_subscription_response.status_code == 200:

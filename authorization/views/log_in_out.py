@@ -1,12 +1,10 @@
 import datetime
-import json
 
+import requests
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
-
-import requests
 
 from authorization.forms import LogInForm
 from weather_reminder.settings import API_URL
@@ -24,8 +22,7 @@ class LogInView(View):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
-            form_data_json = json.dumps(form.cleaned_data)
-            login_response = requests.post(f'{API_URL}/token/', data=form_data_json,
+            login_response = requests.post(f'{API_URL}/token/', data=form.get_json(),
                                            headers={'Content-Type': 'application/json'})
             if login_response.status_code == 200:
                 response = HttpResponseRedirect(self.success_url)
