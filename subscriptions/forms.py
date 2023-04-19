@@ -7,14 +7,12 @@ from .models import Subscription
 class SubscriptionCreateForm(CustomModelForm):
     class Meta:
         model = Subscription
-        fields = ['city_name', 'country_name', 'times_per_day']
-
-    def clean(self):
-        cleaned_data = super().clean()
-        cleaned_data['city'] = {'name': cleaned_data['city_name'], 'country_name': cleaned_data['country_name']}
-        cleaned_data.pop('city_name')
-        cleaned_data.pop('country_name')
-        return cleaned_data
+        fields = ['country_name', 'city_name', 'times_per_day']
+        labels = {
+            'country_name': 'Country',
+            'city_name': 'City',
+            'times_per_day': 'Frequency'
+        }
 
     def get_json(self):
         data = {

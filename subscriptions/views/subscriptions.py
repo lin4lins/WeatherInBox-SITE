@@ -44,7 +44,7 @@ class SubscriptionCreateView(LoginRequiredMixin, View):
 
             form.add_api_response_errors(create_subscription_response.json())
 
-        return HttpResponse(form.errors)
+        return render(request, self.template_name, {'form': form})
 
 
 class SubscriptionUpdateView(LoginRequiredMixin, View):
