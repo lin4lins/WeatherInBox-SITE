@@ -36,14 +36,13 @@ class SubscriptionCreateView(LoginRequiredMixin, View):
         form = self.form_class(request.POST)
         if form.is_valid():
             jwt_token = request.COOKIES.get('jwt_token')
-            form_data_json = json.dumps(form.cleaned_data)
-            create_subscription_response = requests.post(f'{API_URL}/subscriptions/', data=form_data_json,
+            create_subscription_response = requests.post(f'{API_URL}/subscriptions/', data=form.get_json(),
                                                          headers={'Authorization': f'Bearer {jwt_token}',
                                                                   'Content-Type': 'application/json'})
             if create_subscription_response.status_code == 201:
                 return HttpResponseRedirect(self.success_url)
 
-            return HttpResponse(create_subscription_response.content)
+            form.add_api_response_errors(create_subscription_response.json())
 
         return HttpResponse(form.errors)
 

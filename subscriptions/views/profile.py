@@ -34,6 +34,6 @@ class ProfileView(LoginRequiredMixin, View):
             if partial_update_user_response.status_code == 200:
                 return HttpResponseRedirect(self.success_url)
 
-            form.add_response_errors(partial_update_user_response.json())
+            form.add_api_response_errors(partial_update_user_response.json())
 
         return render(request, self.template_name, {'form': form})

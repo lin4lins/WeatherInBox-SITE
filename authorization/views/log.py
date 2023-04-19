@@ -37,7 +37,7 @@ class LogInView(View):
                                     max_age=datetime.timedelta(days=1))
                 return response
 
-            form.add_response_errors(login_response.json())
+            form.add_api_response_errors(login_response.json())
 
         return render(request, self.template_name, {'form': form})
 
