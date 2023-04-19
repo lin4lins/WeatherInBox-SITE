@@ -16,45 +16,51 @@
           <div class="col-12">
             <div class="card shadow-sm border-top-0">
               <div class="card-body">
+                {% for error in form.non_field_errors %}
+                  <small class="text-danger">{{ error }}</small>
+                {% endfor %}
                 <div class="row mt-2">
-                  {% for field in form.visible_fields %}
-                    {% if field == form.country_name %}
-                      <div class="col">
-                        {% if form.is_bound %}
-                          {% if form.non_field_errors %}
-                            {% render_field field class="form-control is-invalid" placeholder=field.label list="countries" %}
-                            {% for error in form.non_field_errors %}
-                              <small class="text-danger">{{ error }}</small>
-                            {% endfor %}
-                          {% else %}
-                            {% render_field field class="form-control is-valid" placeholder=field.label list="countries" %}
-                          {% endif %}
-                        {% else %}
-                          {% render_field field class="form-control" placeholder=field.label list="countries" %}
-                        {% endif %}
-                        <datalist id="countries">
-                          {% for country in country_names %}
-                            <option value="{{ country }}">
-                          {% endfor %}
-                        </datalist>
-                      </div>
-                    {% elif field == form.city_name %}
-                      <div class="col">
-                        {% if form.is_bound %}
-                          {% if form.non_field_errors %}
-                            {% render_field field class="form-control is-invalid" placeholder=field.label %}
-                            {% for error in form.non_field_errors %}
-                              <small class="text-danger">{{ error }}</small>
-                            {% endfor %}
-                          {% else %}
-                            {% render_field field class="form-control is-valid" placeholder=field.label %}
-                          {% endif %}
-                        {% else %}
-                          {% render_field field class="form-control" placeholder=field.label %}
-                        {% endif %}
-                      </div>
+                  <div class="col">
+                    {% if form.is_bound %}
+                      {% if form.non_field_errors %}
+                        {% render_field form.country_name class="form-control is-invalid" placeholder=form.country_name.label list="countries" %}
+                      {% elif form.country_name.errors %}
+                        {% render_field form.country_name class="form-control is-invalid" placeholder=form.country_name.label list="countries" %}
+                        {% for error in form.country_name.errors %}
+                          <div class="invalid-feedback">
+                            {{ error }}
+                          </div>
+                        {% endfor %}
+                      {% else %}
+                        {% render_field form.country_name class="form-control is-valid" placeholder=form.country_name.label list="countries" %}
+                      {% endif %}
+                    {% else %}
+                      {% render_field form.country_name class="form-control" placeholder=form.country_name.label list="countries" %}
                     {% endif %}
-                  {% endfor %}
+                    <datalist id="countries">
+                      {% for country in country_names %}
+                        <option value="{{ country }}">
+                      {% endfor %}
+                    </datalist>
+                  </div>
+                  <div class="col">
+                    {% if form.is_bound %}
+                      {% if form.non_field_errors %}
+                        {% render_field form.city_name class="form-control is-invalid" placeholder=form.city_name.label %}
+                      {% elif form.city_name.errors %}
+                          {% render_field form.city_name class="form-control is-invalid" placeholder=form.city_name.label %}
+                          {% for error in form.city_name.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                        {% endfor %}
+                      {% else %}
+                        {% render_field form.city_name class="form-control is-valid" placeholder=form.city_name.label %}
+                      {% endif %}
+                    {% else %}
+                      {% render_field form.city_name class="form-control" placeholder=form.city_name.label %}
+                    {% endif %}
+                  </div>
                 </div>
                 <div class="row mt-3">
                   <div class="col-xs-12 col-3">
