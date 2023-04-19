@@ -1,5 +1,6 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django import forms
+import json
+
+from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
 
 from authorization.models import User
@@ -18,12 +19,15 @@ class SignUpForm(UserCreationForm):
 
             self.add_error(field, error)
 
-    def clean(self):
-        cleaned_data = super().clean()
-        cleaned_data['password'] = cleaned_data.get('password1', None)
-        cleaned_data.pop('password1', None)
-        cleaned_data.pop('password2', None)
-        return cleaned_data
+    def get_json(self):
+        data = {
+            'username': self.cleaned_data.get('username'),
+            'first_name': self.cleaned_data.get('first_name'),
+            'last_name': self.cleaned_data.get('first_name'),
+            'email': self.cleaned_data.get('email'),
+            'password': self.cleaned_data.get('password1'),
+        }
+        return json.dumps(data)
 
 
 class LogInForm(ModelForm):

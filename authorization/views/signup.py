@@ -26,8 +26,7 @@ class SignUpView(View):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
-            form_data_json = json.dumps(form.cleaned_data)
-            create_user_response = requests.post(f'{API_URL}/users/', data=form_data_json,
+            create_user_response = requests.post(f'{API_URL}/users/', data=form.get_json(),
                                                  headers={'Content-Type': 'application/json'})
             if create_user_response.status_code == 201:
                 return HttpResponseRedirect(self.success_url)
