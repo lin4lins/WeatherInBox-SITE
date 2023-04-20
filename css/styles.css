@@ -1,0 +1,9 @@
+body {
+font-family: 'Open Sans', sans-serif;
+}
+
+.btn-outline:hover {
+background-color: #00BF63;
+border-color: #00BF63;
+color: white !important;
+}

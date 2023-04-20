@@ -1,9 +1,11 @@
+import os
+
 import requests
 from django.shortcuts import render
 from django.views import View
 
 from subscriptions.mixins import LoginRequiredMixin
-from weather_reminder.settings import API_URL
+from weather_reminder.settings import API_URL, STATIC_ROOT
 
 
 class HomeView(LoginRequiredMixin, View):

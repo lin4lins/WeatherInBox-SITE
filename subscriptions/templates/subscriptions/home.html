@@ -1,6 +1,6 @@
 {% extends "navbase.html" %}
-
 {% block content %}
+{% load static %}
 
 <div class="container">
   <div class="row justify-content-center align-items-center">
@@ -33,7 +33,7 @@
                   </div>
                 </div>
                 <div class="col-12 col-md mt-2 mb-3 d-none d-md-block">
-                  <img src="/images/user.png" alt="User logo" class="img-fluid">
+                  <img src="{% static 'user.png' %}" alt="User logo" class="img-fluid">
                 </div>
               </div>
             </div>
@@ -63,7 +63,7 @@
                   </div>
                 </div>
                 <div class="col-12 col-md mt-2 mb-3 d-none d-md-block">
-                  <img src="/images/notification.png" alt="User logo" class="img-fluid">
+                  <img src="{% static 'notification.png' %}" alt="Notif logo" class="img-fluid">
                 </div>
               </div>
             </div>
