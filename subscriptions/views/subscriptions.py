@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
 
-from subscriptions.forms import SubscriptionCreateForm, SubscriptionUpdateForm
+from subscriptions.forms import SubscriptionCreateForm
 from subscriptions.mixins import LoginRequiredMixin
 from weather_reminder.settings import API_URL
 

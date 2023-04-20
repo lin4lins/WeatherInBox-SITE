@@ -73,7 +73,7 @@
                           </div>
                         {% endfor %}
                       {% else %}
-                        {% render_field form.times_per_day class="form-control is-valid" placeholder=form.times_per_day.label min="1" max="12" %}
+                        {% render_field form.times_per_day class="form-control is-valid" placeholder=form.times_per_day.label min="1" max="12" step="1" %}
                       {% endif %}
                     {% else %}
                       {% render_field form.times_per_day class="form-control" placeholder=form.times_per_day.label min="1" max="12" %}
