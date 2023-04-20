@@ -49,24 +49,18 @@ class SubscriptionCreateView(LoginRequiredMixin, View):
 
 class SubscriptionUpdateView(LoginRequiredMixin, View):
     template_name = 'subscriptions/subscriptions-create.html'
-    form_class = SubscriptionUpdateForm
 
     def post(self, request, id: int):
-        request_body_str = request.body.decode('utf-8')
-        request_body_dict = json.loads(request_body_str)
-        form = self.form_class(request_body_dict)
-        if form.is_valid():
-            jwt_token = request.COOKIES.get('jwt_token')
-            partial_update_subscription_response = requests.patch(f'{API_URL}/subscriptions/{id}/',
-                                                                  data=form.get_json(),
-                                                                  headers={'Authorization': f'Bearer {jwt_token}',
-                                                                           'Content-Type': 'application/json'})
-            if partial_update_subscription_response.status_code == 200:
-                return HttpResponse(status=200)
-
-            return HttpResponse(partial_update_subscription_response.content, status=400)
-
-        return HttpResponse(form.errors, status=400)
+        is_active = request.GET.get('is_active', None)
+        times_per_day = request.GET.get('times_per_day', None)
+        data = {'is_active': is_active} if is_active else {'times_per_day': times_per_day} if times_per_day else {}
+        jwt_token = request.COOKIES.get('jwt_token')
+        partial_update_subscription_response = requests.patch(f'{API_URL}/subscriptions/{id}/',
+                                                              data=json.dumps(data),
+                                                              headers={'Authorization': f'Bearer {jwt_token}',
+                                                                       'Content-Type': 'application/json'})
+        return HttpResponse(status=partial_update_subscription_response.status_code,
+                            content=partial_update_subscription_response.content)
 
 
 class SubscriptionDeleteView(LoginRequiredMixin, View):

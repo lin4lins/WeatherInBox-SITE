@@ -25,12 +25,6 @@ class SubscriptionCreateForm(CustomModelForm):
         return json.dumps(data)
 
 
-class SubscriptionUpdateForm(CustomModelForm):
-    class Meta:
-        model = Subscription
-        fields = ['times_per_day', 'is_active']
-
-
 class UpdateProfileForm(CustomModelForm):
     class Meta:
         model = User

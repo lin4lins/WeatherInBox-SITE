@@ -49,8 +49,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 <script>
 function cancelSubscription(subId, csrfToken) {
-  const url = `/subscription/update/${subId}/`;
-  const data = { is_active: false };
+  const url = `/subscription/update/${subId}/?is_active=false`;
   const headers = {
     'Content-Type': 'application/json',
     'X-CSRFToken': csrfToken,
@@ -59,7 +58,6 @@ function cancelSubscription(subId, csrfToken) {
   fetch(url, {
     method: 'POST',
     headers: headers,
-    body: JSON.stringify(data),
   })
   .then(response => {
     if (response.status === 200) {
@@ -76,8 +74,7 @@ function cancelSubscription(subId, csrfToken) {
 }
 
 function activateSubscription(subId, csrfToken) {
-  const url = `/subscription/update/${subId}/`;
-  const data = { is_active: true };
+  const url = `/subscription/update/${subId}/?is_active=true`;
   const headers = {
     'Content-Type': 'application/json',
     'X-CSRFToken': csrfToken,
@@ -86,7 +83,6 @@ function activateSubscription(subId, csrfToken) {
   fetch(url, {
     method: 'POST',
     headers: headers,
-    body: JSON.stringify(data),
   })
   .then(response => {
     if (response.status === 200) {
@@ -103,26 +99,52 @@ function activateSubscription(subId, csrfToken) {
 }
 
 function updateSubscription(subId, csrfToken) {
-  const url = `/subscription/update/${subId}/`;
   const timesPerDayInput = document.getElementById(`timesPerDayInput-${subId}`);
-  const data = { times_per_day: timesPerDayInput.value };
+  if (timesPerDayInput.value.length === 0) {
+      let timesPerDayInput = document.getElementById(`timesPerDayInput-${subId}`);
+      timesPerDayInput.classList.add("is-invalid");
+      let errorDiv = document.createElement("div");
+      errorDiv.classList.add("invalid-feedback");
+      errorDiv.id = `errorDiv-${subId}`;
+      errorDiv.innerHTML = 'Enter numbers only.';
+      timesPerDayInput.parentNode.appendChild(errorDiv);
+      return
+  }
+  const url = `/subscription/update/${subId}/?times_per_day=${timesPerDayInput.value}`;
   const headers = {
     'Content-Type': 'application/json',
     'X-CSRFToken': csrfToken,
   };
 
   fetch(url, {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify(data),
+  method: 'POST',
+  headers: headers,
   })
   .then(response => {
+    let errorDiv = document.getElementById(`errorDiv-${subId}`);
+    if (errorDiv) {
+      errorDiv.remove();
+    }
+
     if (response.status === 200) {
-        let timesPerDayH6 = document.getElementById(`timesPerDay-${subId}`);
-        timesPerDayH6.innerHTML = timesPerDayInput.value;
-        let statusDiv = document.getElementById(`statusDiv-${subId}`);
-        statusDiv.innerHTML = `<span class="badge rounded-pill" style="color: #00BF63; border: 1px solid #00BF63; background-color: #E5F8EF; margin-left: 5px;">✓ Completed</span>`
-        }
+      let timesPerDayInput = document.getElementById(`timesPerDayInput-${subId}`);
+      let timesPerDayH6 = document.getElementById(`timesPerDay-${subId}`);
+      timesPerDayH6.innerHTML = timesPerDayInput.value;
+      timesPerDayInput.classList.remove("is-invalid");
+      timesPerDayInput.classList.add("is-valid");
+      let statusDiv = document.getElementById(`statusDiv-${subId}`);
+      statusDiv.innerHTML = `<span class="badge rounded-pill" style="color: #00BF63; border: 1px solid #00BF63; background-color: #E5F8EF; margin-left: 5px;">✓ Completed</span>`
+    } else if (response.status === 400) {
+      response.json().then(errorObj => {
+        let timesPerDayInput = document.getElementById(`timesPerDayInput-${subId}`);
+        timesPerDayInput.classList.add("is-invalid");
+        let errorDiv = document.createElement("div");
+        errorDiv.classList.add("invalid-feedback");
+        errorDiv.id = `errorDiv-${subId}`;
+        errorDiv.innerHTML = errorObj['times_per_day'];
+        timesPerDayInput.parentNode.appendChild(errorDiv);
+      });
+    }
   })
   .catch(error => console.error(error));
 }
