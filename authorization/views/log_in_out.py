@@ -40,8 +40,7 @@ class LogInView(View):
 
 
 class LogOutView(View):
-    template_name = 'authorization/logout.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('login')
 
     def get(self, request):
         response = HttpResponseRedirect(self.success_url)
