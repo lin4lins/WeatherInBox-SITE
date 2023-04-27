@@ -14,11 +14,15 @@ from weather_reminder.settings import API_URL
 
 class SubscriptionListView(LoginRequiredMixin, View):
     template_name = 'subscriptions/subscriptions.html'
+    logout_url = reverse_lazy('logout')
 
     def get(self, request):
         user_id, jwt_token = request.COOKIES.get('user_id'), request.COOKIES.get('jwt_token')
         subscription_list_response = requests.get(f'{API_URL}/subscriptions/',
                                                   headers={'Authorization': f'Bearer {jwt_token}'})
+        if subscription_list_response.status_code != 200:
+            return HttpResponseRedirect(self.logout_url)
+
         return render(request, self.template_name, {'subs': subscription_list_response.json()})
 
 
@@ -48,8 +52,6 @@ class SubscriptionCreateView(LoginRequiredMixin, View):
 
 
 class SubscriptionUpdateView(LoginRequiredMixin, View):
-    template_name = 'subscriptions/subscriptions-create.html'
-
     def post(self, request, id: int):
         is_active = request.GET.get('is_active', None)
         times_per_day = request.GET.get('times_per_day', None)
@@ -64,11 +66,9 @@ class SubscriptionUpdateView(LoginRequiredMixin, View):
 
 
 class SubscriptionDeleteView(LoginRequiredMixin, View):
-    template_name = 'subscriptions/subscriptions.html'
-
     def get(self, request, id: int):
         jwt_token = request.COOKIES.get('jwt_token')
-        subscription_delete_response = requests.delete(f'{API_URL}/subscriptions/{id}',
+        subscription_delete_response = requests.delete(f'{API_URL}/subscriptions/{id}/',
                                                        headers={'Authorization': f'Bearer {jwt_token}'})
         if subscription_delete_response.status_code == 204:
             return HttpResponse(status=200)

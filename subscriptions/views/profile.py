@@ -1,5 +1,3 @@
-import json
-
 import requests
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -15,11 +13,15 @@ class ProfileView(LoginRequiredMixin, View):
     template_name = 'subscriptions/profile.html'
     form_class = UpdateProfileForm
     success_url = reverse_lazy('home')
+    logout_url = reverse_lazy('logout')
 
     def get(self, request):
         user_id, jwt_token = request.COOKIES.get('user_id'), request.COOKIES.get('jwt_token')
-        current_user_response = requests.get(f'{API_URL}/users/{user_id}',
+        current_user_response = requests.get(f'{API_URL}/users/{user_id}/',
                                              headers={'Authorization': f'Bearer {jwt_token}'})
+        if current_user_response.status_code != 200:
+            return HttpResponseRedirect(self.logout_url)
+
         filled_form = self.form_class(current_user_response.json())
         return render(request, self.template_name, {'form': filled_form})
 

@@ -1,5 +1,3 @@
-import json
-
 import requests
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
