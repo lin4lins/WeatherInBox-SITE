@@ -24,43 +24,45 @@
                   <div class="col">
                     {% if form.is_bound %}
                       {% if form.non_field_errors %}
-                        {% render_field form.country_name class="form-control is-invalid" placeholder=form.country_name.label list="countries" %}
-                      {% elif form.country_name.errors %}
-                        {% render_field form.country_name class="form-control is-invalid" placeholder=form.country_name.label list="countries" %}
-                        {% for error in form.country_name.errors %}
+                        <<select name="city_id" class="form-select is-invalid">
+                          <option selected>Select location</option>
+                          {% for city in cities %}
+                            <option value="{{city.id}}">{{ city.country_name }}, {{ city.name }}</option>
+                          {% endfor %}
+                        </select>
+                      {% elif form.city_id.errors %}
+                        <select name="city_id" class="form-select is-invalid">
+                          <option selected>Select location</option>
+                          {% for city in cities %}
+                            <option value="{{city.id}}">{{ city.country_name }}, {{ city.name }}</option>
+                          {% endfor %}
+                        </select>
+                        {% for error in form.city_id.errors %}
                           <div class="invalid-feedback">
                             {{ error }}
                           </div>
                         {% endfor %}
                       {% else %}
-                        {% render_field form.country_name class="form-control is-valid" placeholder=form.country_name.label list="countries" %}
+                        <select name="city_id" class="form-select is-valid">
+                          <option selected>Select location</option>
+                          {% for city in cities %}
+                            <option value="{{city.id}}">{{ city.country_name }}, {{ city.name }}</option>
+                          {% endfor %}
+                        </select>
                       {% endif %}
                     {% else %}
-                      {% render_field form.country_name class="form-control" placeholder=form.country_name.label list="countries" %}
-                    {% endif %}
-                    <datalist id="countries">
-                      {% for country in country_names %}
-                        <option value="{{ country }}">
-                      {% endfor %}
-                    </datalist>
-                  </div>
-                  <div class="col">
-                    {% if form.is_bound %}
-                      {% if form.non_field_errors %}
-                        {% render_field form.city_name class="form-control is-invalid" placeholder=form.city_name.label %}
-                      {% elif form.city_name.errors %}
-                          {% render_field form.city_name class="form-control is-invalid" placeholder=form.city_name.label %}
-                          {% for error in form.city_name.errors %}
-                            <div class="invalid-feedback">
-                              {{ error }}
-                            </div>
+                      <select name="city_id" class="form-select">
+                        <option selected>Select location</option>
+                        {% for city in cities %}
+                          <option value="{{city.id}}">{{ city.country_name }}, {{ city.name }}</option>
                         {% endfor %}
-                      {% else %}
-                        {% render_field form.city_name class="form-control is-valid" placeholder=form.city_name.label %}
-                      {% endif %}
-                    {% else %}
-                      {% render_field form.city_name class="form-control" placeholder=form.city_name.label %}
+                      </select>
                     {% endif %}
+<!--                    <datalist id="cities">-->
+<!--                      {% for city in cities %}-->
+<!--                        <option value="{{city.id}}">{{ city.country_name }}, {{ city.name }}</option>-->
+<!--                      {% endfor %}-->
+<!--                    </datalist>-->
                   </div>
                 </div>
                 <div class="row mt-3">

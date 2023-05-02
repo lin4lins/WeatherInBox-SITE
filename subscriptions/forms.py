@@ -1,5 +1,7 @@
 import json
 
+from django import forms
+
 from authorization.forms import CustomModelForm
 from authorization.models import User
 
@@ -7,22 +9,14 @@ from .models import Subscription
 
 
 class SubscriptionCreateForm(CustomModelForm):
+    city_id = forms.IntegerField(error_messages={'invalid': 'Please select a location.'})
+
     class Meta:
         model = Subscription
-        fields = ['country_name', 'city_name', 'times_per_day']
-        labels = {
-            'country_name': 'Country',
-            'city_name': 'City',
-            'times_per_day': 'Frequency'
-        }
+        fields = ['city_id', 'times_per_day']
 
     def get_json(self):
-        data = {
-            'city': {'name': self.cleaned_data.get('city_name', None),
-                     'country_name': self.cleaned_data.get('country_name', None)},
-            'times_per_day': self.cleaned_data.get('times_per_day', None)
-        }
-        return json.dumps(data)
+        return json.dumps(self.cleaned_data)
 
 
 class UpdateProfileForm(CustomModelForm):

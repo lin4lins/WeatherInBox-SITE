@@ -1,6 +1,5 @@
 import json
 
-import pycountry
 import requests
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -30,16 +29,21 @@ class SubscriptionCreateView(LoginRequiredMixin, View):
     template_name = 'subscriptions/subscriptions-create.html'
     form_class = SubscriptionCreateForm
     success_url = reverse_lazy('subscription-list')
+    logout_url = reverse_lazy('logout')
 
     def get(self, request):
-        form = SubscriptionCreateForm()
-        country_names = [country.name for country in pycountry.countries]
-        return render(request, self.template_name, {'form': form, 'country_names': country_names})
+        form = self.form_class()
+        jwt_token = request.COOKIES.get('jwt_token')
+        cities_response = requests.get(f'{API_URL}/cities/', headers={'Authorization': f'Bearer {jwt_token}',
+                                                                    'Content-Type': 'application/json'})
+        if cities_response.status_code != 200:
+            return HttpResponseRedirect(self.logout_url)
+        return render(request, self.template_name, {'form': form, 'cities': cities_response.json()})
 
     def post(self, request):
         form = self.form_class(request.POST)
+        jwt_token = request.COOKIES.get('jwt_token')
         if form.is_valid():
-            jwt_token = request.COOKIES.get('jwt_token')
             create_subscription_response = requests.post(f'{API_URL}/subscriptions/', data=form.get_json(),
                                                          headers={'Authorization': f'Bearer {jwt_token}',
                                                                   'Content-Type': 'application/json'})
@@ -48,7 +52,9 @@ class SubscriptionCreateView(LoginRequiredMixin, View):
 
             form.add_api_response_errors(create_subscription_response.json())
 
-        return render(request, self.template_name, {'form': form})
+        cities_response = requests.get(f'{API_URL}/cities/', headers={'Authorization': f'Bearer {jwt_token}',
+                                                                      'Content-Type': 'application/json'})
+        return render(request, self.template_name, {'form': form, 'cities': cities_response.json()})
 
 
 class SubscriptionUpdateView(LoginRequiredMixin, View):

@@ -32,9 +32,7 @@ class SubscriptionListViewTestCase(CustomTestCase):
         self.assertTemplateUsed(response, SubscriptionListView.template_name)
         self.assertEqual(len(response.context['subs']), 1)
         self.assertEqual(response.context['subs'][0]['id'], sub_id)
-        self.assertEqual(response.context['subs'][0]['city']['name'], SUBSCRIPTION_VALID_DATA['city']['name'])
-        self.assertEqual(response.context['subs'][0]['city']['country_name'],
-                         SUBSCRIPTION_VALID_DATA['city']['country_name'])
+        self.assertEqual(response.context['subs'][0]['city']['id'], SUBSCRIPTION_VALID_DATA['city_id'])
 
     def test_get_unauthorized(self):
         response = self.client.get(self.url)
@@ -54,42 +52,26 @@ class SubscriptionCreateViewTestCase(CustomTestCase):
         self.success_url = reverse('subscription-list')
         self.login_url = reverse('login')
         self.valid_data = {
-            'city_name': 'Kyiv',
-            'country_name': 'Ukraine',
+            'city_id': 500,
             'times_per_day': 2
         }
         self.required_field_is_missing_data = {
-            'city_name': 'Kyiv',
-            'times_per_day': 2
-        }
-        self.city_name_empty_data = {
-            'city_name': '',
-            'country_name': 'Ukraine',
-            'times_per_day': 2
-        }
-        self.country_name_empty_data = {
-            'city_name': 'Kyiv',
-            'country_name': '',
             'times_per_day': 2
         }
         self.not_existing_city_data = {
-            'city_name': 'Test99',
-            'country_name': 'Ukraine',
+            'city_id': 10000,
             'times_per_day': 2
         }
-        self.not_existing_country_data = {
-            'city_name': 'Kyiv',
-            'country_name': 'Test99',
+        self.invalid_location_input_data = {
+            'city_id': 'Select location',
             'times_per_day': 2
         }
         self.times_per_day_out_of_range_number_data = {
-            'city_name': 'Kyiv',
-            'country_name': 'Ukraine',
+            'city_id': 500,
             'times_per_day': 99
         }
         self.times_per_day_not_number_data = {
-            'city_name': 'Kyiv',
-            'country_name': 'Ukraine',
+            'city_id': 500,
             'times_per_day': '#'
         }
 
@@ -99,7 +81,7 @@ class SubscriptionCreateViewTestCase(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, SubscriptionCreateView.template_name)
         self.assertIsInstance(response.context['form'], SubscriptionCreateView.form_class)
-        self.assertIn('country_names', response.context)
+        self.assertIn('cities', response.context)
 
     def test_get_unauthorized(self):
         response = self.client.get(self.url)
@@ -123,26 +105,8 @@ class SubscriptionCreateViewTestCase(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context['form'].is_valid())
         self.assertEqual(len(response.context['form'].errors.keys()), 1)
-        self.assertIn('country_name', response.context['form'].errors.keys())
-        self.assertIn('This field is required.', response.context['form'].errors.get('country_name'))
-
-    @authorized()
-    def test_post_city_name_empty(self):
-        response = self.client.post(self.url, self.city_name_empty_data)
-        self.assertEqual(response.status_code, 200)
-        self.assertFalse(response.context['form'].is_valid())
-        self.assertEqual(len(response.context['form'].errors.keys()), 1)
-        self.assertIn('city_name', response.context['form'].errors.keys())
-        self.assertIn('This field is required.', response.context['form'].errors.get('city_name'))
-
-    @authorized()
-    def test_post_country_name_empty(self):
-        response = self.client.post(self.url, self.country_name_empty_data)
-        self.assertEqual(response.status_code, 200)
-        self.assertFalse(response.context['form'].is_valid())
-        self.assertEqual(len(response.context['form'].errors.keys()), 1)
-        self.assertIn('country_name', response.context['form'].errors.keys())
-        self.assertIn('This field is required.', response.context['form'].errors.get('country_name'))
+        self.assertIn('city_id', response.context['form'].errors.keys())
+        self.assertIn('This field is required.', response.context['form'].errors.get('city_id'))
 
     @authorized()
     def test_post_not_existing_city(self):
@@ -150,17 +114,17 @@ class SubscriptionCreateViewTestCase(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context['form'].is_valid())
         self.assertEqual(len(response.context['form'].errors.keys()), 1)
-        self.assertIn('city_name', response.context['form'].errors.keys())
-        self.assertIn('Not found.', response.context['form'].errors.get('city_name'))
+        self.assertIn('city_id', response.context['form'].errors.keys())
+        self.assertIn('Invalid pk "10000" - object does not exist.', response.context['form'].errors.get('city_id')[0])
 
     @authorized()
-    def test_post_not_existing_country(self):
-        response = self.client.post(self.url, self.not_existing_country_data)
+    def test_post_invalid_location_input(self):
+        response = self.client.post(self.url, self.invalid_location_input_data)
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context['form'].is_valid())
         self.assertEqual(len(response.context['form'].errors.keys()), 1)
-        self.assertIn('country_name', response.context['form'].errors.keys())
-        self.assertIn('Not found.', response.context['form'].errors.get('country_name'))
+        self.assertIn('city_id', response.context['form'].errors.keys())
+        self.assertIn('Please select a location.', response.context['form'].errors.get('city_id'))
 
     @authorized()
     def test_post_times_per_day_out_of_range_number(self):
