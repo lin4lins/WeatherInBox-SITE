@@ -5,7 +5,7 @@ import requests
 from weather_reminder.settings import API_URL
 
 SUBSCRIPTION_VALID_DATA = {
-    'city_id': 500,
+    'city_id': 1,
     'times_per_day': 2
 }
 

@@ -52,7 +52,7 @@ class SubscriptionCreateViewTestCase(CustomTestCase):
         self.success_url = reverse('subscription-list')
         self.login_url = reverse('login')
         self.valid_data = {
-            'city_id': 500,
+            'city_id': 1,
             'times_per_day': 2
         }
         self.required_field_is_missing_data = {
@@ -67,11 +67,11 @@ class SubscriptionCreateViewTestCase(CustomTestCase):
             'times_per_day': 2
         }
         self.times_per_day_out_of_range_number_data = {
-            'city_id': 500,
+            'city_id': 1,
             'times_per_day': 99
         }
         self.times_per_day_not_number_data = {
-            'city_id': 500,
+            'city_id': 1,
             'times_per_day': '#'
         }
 
@@ -133,7 +133,7 @@ class SubscriptionCreateViewTestCase(CustomTestCase):
         self.assertFalse(response.context['form'].is_valid())
         self.assertEqual(len(response.context['form'].errors.keys()), 1)
         self.assertIn('times_per_day', response.context['form'].errors.keys())
-        self.assertIn('Ensure this value is less than or equal to 12.',
+        self.assertIn('Select a valid choice. 99 is not one of the available choices.',
                       response.context['form'].errors.get('times_per_day'))
 
     @authorized()
@@ -143,7 +143,7 @@ class SubscriptionCreateViewTestCase(CustomTestCase):
         self.assertFalse(response.context['form'].is_valid())
         self.assertEqual(len(response.context['form'].errors.keys()), 1)
         self.assertIn('times_per_day', response.context['form'].errors.keys())
-        self.assertIn('Enter a whole number.',
+        self.assertIn('Select a valid choice. # is not one of the available choices.',
                       response.context['form'].errors.get('times_per_day'))
 
     @authorized()
@@ -203,11 +203,11 @@ class SubscriptionUpdateViewTestCase(CustomTestCase):
     @authorized()
     def test_post_update_times_per_day_valid(self):
         url = reverse(self.url_name, args=[self.subscription_id])
-        response = self.client.post(f'{url}?times_per_day=8')
+        response = self.client.post(f'{url}?times_per_day=4')
         response_body_str = response.content.decode('utf-8')
         response_dict = json.loads(response_body_str)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response_dict.get('times_per_day'), 6)
+        self.assertEqual(response_dict.get('times_per_day'), 4)
         self.client.post(f'{url}?times_per_day={SUBSCRIPTION_VALID_DATA["times_per_day"]}')
 
     @authorized()
@@ -217,7 +217,7 @@ class SubscriptionUpdateViewTestCase(CustomTestCase):
         response_body_str = response.content.decode('utf-8')
         response_dict = json.loads(response_body_str)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response_dict.get('times_per_day')[0], 'Ensure this value is less than or equal to 12.')
+        self.assertEqual(response_dict.get('times_per_day')[0], '"99" is not a valid choice.')
 
     @authorized()
     def test_post_times_per_day_invalid(self):
