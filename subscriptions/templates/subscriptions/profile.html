@@ -1,0 +1,64 @@
+{% extends "navbase.html" %}
+{% block content %}
+{% load static %}
+{% load widget_tweaks %}
+
+<div class="container">
+  <div class="row justify-content-center align-items-center">
+    <div class="col-md-7 mb-4 mb-md-0">
+      <div class="row mt-5">
+        <div class="col-12">
+          <h3 class="fw-bolder text-start">Profile details</h3>
+        </div>
+      </div>
+      <form class="form-floating" method="POST" action="/profile/" novalidate>
+        {% csrf_token %}
+        {% for field in form.visible_fields %}
+          {% if field == form.receive_emails %}
+            <div class="row mt-5">
+              <div class="col-12">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="receive_emails" id="receive_emails"
+                  {% if field.value %}
+                    checked
+                  {% endif %}>
+                  <label class="form-check-label" for="receive_emails">I would like to receive weather updates via email</label>
+                </div>
+              </div>
+            </div>
+          {% else %}
+          <div class="row mt-3">
+            <div class="col-12">
+              <div class="form-floating">
+                {% if field.errors %}
+                  {% render_field field class="form-control is-invalid" placeholder=field.label id=field.name value=field.value %}
+                  {% for error in field.errors %}
+                    <div class="invalid-feedback">
+                      {{ error }}
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  {% render_field field class="form-control" placeholder=field.label id=field.name value=field.value %}
+                {% endif %}
+                <label>{{field.label}}</label>
+                {% if field == form.webhook_url %}
+                  <small class="text-muted">Enter the URL where you want to receive weather updates, or leave blank to receive updates via email only.</small>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+         <div class="row mt-3">
+          <div class="col-12">
+            <div class="d-flex">
+              <button type="submit" class="btn btn-sm text-white fw-bolder" style="background-color: #00BF63; width: fit-content;">Update</button>
+            </div>
+          </div>
+         </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

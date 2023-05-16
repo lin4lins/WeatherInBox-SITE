@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  site:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8001
+    volumes:
+      - .:/site
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    networks:
+      -  api-site-network
+
+networks:
+   api-site-network:
+    external: true

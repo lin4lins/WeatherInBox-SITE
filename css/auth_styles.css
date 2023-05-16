@@ -1,0 +1,20 @@
+body, html {
+min-height: 90vh;
+}
+
+body {
+font-family: 'Open Sans', sans-serif;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+}
+.btn-custom {
+ border: 1px solid #00BF63;
+ color: #00BF63;
+}
+.btn-custom:hover {
+background-color: #00BF63;
+border-color: #00BF63;
+color: white !important;
+}

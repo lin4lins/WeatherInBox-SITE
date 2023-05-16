@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+{% load widget_tweaks %}
+
+<div class="container" >
+  <div class="row justify-content-between align-items-center">
+    <div class="col-md-5">
+      <div class="row justify-content-center">
+        <div class="col-auto">
+          <img src="{% static 'logo.png' %}" alt="WeatherInBox Logo" class="img-fluid">
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-auto mt-3">
+          <h4 class="fw-light fs-5 fs-md-4 fs-lg-3">Stay informed with custom weather alerts</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3 mb-md-0">
+      <div class="row">
+        <div class="card shadow-sm border-top-0">
+          <div class="card-body">
+            <h2 class="fw-bolder">Sign Up</h2>
+            <h5 class="fw-light text-secondary">Easy and fast.</h5>
+            <hr>
+            <form method='POST' action="{% url 'signup' %}" class="form-group" novalidate>
+              {% csrf_token %}
+              {% for field in form.visible_fields %}
+                {% if field == form.first_name %}
+                  <div class="row">
+                    <div class="col mb-3">
+                      {% if form.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" placeholder=field.label %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" placeholder=field.label %}
+                        {% endif %}
+                    {% else %}
+                      {% render_field field class="form-control" placeholder=field.label %}
+                    {% endif %}
+                    </div>
+                {% elif field == form.last_name %}
+                  <div class="col mb-3">
+                    {% if form.is_bound %}
+                      {% if field.errors %}
+                        {% render_field field class="form-control is-invalid" placeholder=field.label %}
+                        {% for error in field.errors %}
+                          <div class="invalid-feedback">
+                            {{ error }}
+                          </div>
+                        {% endfor %}
+                      {% else %}
+                        {% render_field field class="form-control is-valid" placeholder=field.label %}
+                      {% endif %}
+                  {% else %}
+                    {% render_field field class="form-control" placeholder=field.label %}
+                  {% endif %}
+                  </div>
+                </div>
+                {% else %}
+                  <div class="mb-3">
+                    {% if form.is_bound %}
+                      {% if field.errors %}
+                        {% render_field field class="form-control is-invalid" placeholder=field.label %}
+                        {% for error in field.errors %}
+                          <div class="invalid-feedback">
+                            {{ error }}
+                          </div>
+                        {% endfor %}
+                      {% else %}
+                        {% render_field field class="form-control is-valid" placeholder=field.label %}
+                      {% endif %}
+                    {% else %}
+                      {% render_field field class="form-control" placeholder=field.label %}
+                    {% endif %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+              <hr>
+              <div class="text-center">
+                <button type="submit" class="btn text-white fw-bolder" style="background-color: #00BF63">Sign Up</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="card shadow-sm border-top-0 text-center">
+          <div class="card-body">
+            <h5 class="fw-light">Already have an account? <a href="{% url 'login' %}" class="text-decoration-none" style="color: #00BF63">Log In</a></h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
