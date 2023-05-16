@@ -1,7 +1,7 @@
 FROM python:3.10-alpine3.16
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-WORKDIR /app
-COPY requirements.txt /app/
+WORKDIR /site
+COPY requirements.txt /site/
 RUN pip install -r requirements.txt
-COPY . /app/
+COPY . /site/
