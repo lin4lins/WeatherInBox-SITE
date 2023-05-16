@@ -5,6 +5,13 @@ from django.db import models
 
 
 class Subscription(models.Model):
+    FREQUENCIES = [
+        (1, "1"),
+        (2, "2"),
+        (4, "4"),
+        (6, "6"),
+        (12, "12"),
+    ]
     city_id = models.IntegerField()
-    times_per_day = models.IntegerField(default=1, validators=[MaxValueValidator(12), MinValueValidator(1)])
+    times_per_day = models.IntegerField(default=1, choices=FREQUENCIES)
     is_active = models.BooleanField(default=True)

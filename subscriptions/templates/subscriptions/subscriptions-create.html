@@ -24,7 +24,7 @@
                   <div class="col">
                     {% if form.is_bound %}
                       {% if form.non_field_errors %}
-                        <<select name="city_id" class="form-select is-invalid">
+                        <select name="city_id" class="form-select is-invalid">
                           <option selected>Select location</option>
                           {% for city in cities %}
                             <option value="{{city.id}}">{{ city.country_name }}, {{ city.name }}</option>
@@ -58,28 +58,23 @@
                         {% endfor %}
                       </select>
                     {% endif %}
-<!--                    <datalist id="cities">-->
-<!--                      {% for city in cities %}-->
-<!--                        <option value="{{city.id}}">{{ city.country_name }}, {{ city.name }}</option>-->
-<!--                      {% endfor %}-->
-<!--                    </datalist>-->
                   </div>
                 </div>
                 <div class="row mt-3">
                   <div class="col-xs-12 col-3">
                     {% if form.is_bound %}
                       {% if form.times_per_day.errors %}
-                        {% render_field form.times_per_day class="form-control is-invalid" placeholder=form.times_per_day.label min="1" max="12" %}
+                        {% render_field form.times_per_day class="form-control is-invalid" placeholder=form.times_per_day.label%}
                         {% for error in form.times_per_day.errors %}
                           <div class="invalid-feedback">
                             {{ error }}
                           </div>
                         {% endfor %}
                       {% else %}
-                        {% render_field form.times_per_day class="form-control is-valid" placeholder=form.times_per_day.label min="1" max="12" step="1" %}
+                        {% render_field form.times_per_day class="form-control is-valid" placeholder=form.times_per_day.label %}
                       {% endif %}
                     {% else %}
-                      {% render_field form.times_per_day class="form-control" placeholder=form.times_per_day.label min="1" max="12" %}
+                      {% render_field form.times_per_day class="form-control" placeholder=form.times_per_day.label%}
                     {% endif %}
                   </div>
                 </div>

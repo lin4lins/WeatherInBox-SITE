@@ -207,7 +207,7 @@ class SubscriptionUpdateViewTestCase(CustomTestCase):
         response_body_str = response.content.decode('utf-8')
         response_dict = json.loads(response_body_str)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response_dict.get('times_per_day'), 8)
+        self.assertEqual(response_dict.get('times_per_day'), 6)
         self.client.post(f'{url}?times_per_day={SUBSCRIPTION_VALID_DATA["times_per_day"]}')
 
     @authorized()

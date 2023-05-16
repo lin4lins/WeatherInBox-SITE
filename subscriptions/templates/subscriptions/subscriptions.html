@@ -103,10 +103,15 @@
         <div class="modal-body">
           <div class="row">
             <div class="col">
-              <div class="form-floating">
-                <input type="number" min="1" max="12" step="1" value="{{ sub.times_per_day }}" class="form-control"
-                   id="timesPerDayInput-{{sub.id}}" name="times_per_day">
-                <label for="timesPerDayInput-{{sub.id}}">Frequency</label>
+              <div class="form">
+                <select id="timesPerDaySelect-{{sub.id}}" name="timesPerDaySelect-{{sub.id}}" class="form-select">
+                  <option selected>Frequency</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="4">4</option>
+                  <option value="6">6</option>
+                  <option value="12">12</option>
+                </select>
               </div>
             </div>
           </div>

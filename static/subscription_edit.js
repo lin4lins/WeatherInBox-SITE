@@ -1,3 +1,4 @@
+
 function cancelSubscription(subId, csrfToken) {
   const url = `/subscription/update/${subId}/?is_active=false`;
   const headers = {
@@ -49,18 +50,18 @@ function activateSubscription(subId, csrfToken) {
 }
 
 function updateSubscription(subId, csrfToken) {
-  const timesPerDayInput = document.getElementById(`timesPerDayInput-${subId}`);
-  if (timesPerDayInput.value.length === 0) {
-      let timesPerDayInput = document.getElementById(`timesPerDayInput-${subId}`);
-      timesPerDayInput.classList.add("is-invalid");
+  const timesPerDaySelect = document.getElementById(`timesPerDaySelect-${subId}`);
+  if (timesPerDaySelect.value && !Number.isInteger(Number(timesPerDaySelect.value))) {
+      let timesPerDaySelect = document.getElementById(`timesPerDaySelect-${subId}`);
+      timesPerDaySelect.classList.add("is-invalid");
       let errorDiv = document.createElement("div");
       errorDiv.classList.add("invalid-feedback");
       errorDiv.id = `errorDiv-${subId}`;
       errorDiv.innerHTML = 'Enter numbers only.';
-      timesPerDayInput.parentNode.appendChild(errorDiv);
+      timesPerDaySelect.parentNode.appendChild(errorDiv);
       return
   }
-  const url = `/subscription/update/${subId}/?times_per_day=${timesPerDayInput.value}`;
+  const url = `/subscription/update/${subId}/?times_per_day=${timesPerDaySelect.value}`;
   const headers = {
     'Content-Type': 'application/json',
     'X-CSRFToken': csrfToken,
@@ -77,22 +78,22 @@ function updateSubscription(subId, csrfToken) {
     }
 
     if (response.status === 200) {
-      let timesPerDayInput = document.getElementById(`timesPerDayInput-${subId}`);
+      let timesPerDaySelect = document.getElementById(`timesPerDaySelect-${subId}`);
       let timesPerDayH6 = document.getElementById(`timesPerDay-${subId}`);
-      timesPerDayH6.innerHTML = timesPerDayInput.value;
-      timesPerDayInput.classList.remove("is-invalid");
-      timesPerDayInput.classList.add("is-valid");
+      timesPerDayH6.innerHTML = timesPerDaySelect.value;
+      timesPerDaySelect.classList.remove("is-invalid");
+      timesPerDaySelect.classList.add("is-valid");
       let statusDiv = document.getElementById(`statusDiv-${subId}`);
       statusDiv.innerHTML = `<span class="badge rounded-pill" style="color: #00BF63; border: 1px solid #00BF63; background-color: #E5F8EF; margin-left: 5px;">✓ Completed</span>`
     } else if (response.status === 400) {
       response.json().then(errorObj => {
-        let timesPerDayInput = document.getElementById(`timesPerDayInput-${subId}`);
-        timesPerDayInput.classList.add("is-invalid");
+        let timesPerDaySelect = document.getElementById(`timesPerDaySelect-${subId}`);
+        timesPerDaySelect.classList.add("is-invalid");
         let errorDiv = document.createElement("div");
         errorDiv.classList.add("invalid-feedback");
         errorDiv.id = `errorDiv-${subId}`;
         errorDiv.innerHTML = errorObj['times_per_day'];
-        timesPerDayInput.parentNode.appendChild(errorDiv);
+        timesPerDaySelect.parentNode.appendChild(errorDiv);
       });
     }
   })
